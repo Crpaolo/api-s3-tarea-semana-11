@@ -1,0 +1,54 @@
+service: api-s3
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: us-east-1
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:ListBucket
+        - s3:ListAllMyBuckets
+        - s3:GetObject
+        - s3:PutObject
+        - s3:CreateBucket
+      Resource: "*"
+
+functions:
+
+  listaBuckets:
+    handler: lista_buckets.lambda_handler
+    events:
+      - httpApi:
+          path: /s3/lista-buckets
+          method: get
+
+  listaObjetos:
+    handler: lista_objetos_bucket.lambda_handler
+    events:
+      - httpApi:
+          path: /s3/lista-objetos
+          method: post
+
+  crearBucket:
+    handler: crear_bucket.lambda_handler
+    events:
+      - httpApi:
+          path: /s3/crear-bucket
+          method: post
+
+  crearDirectorio:
+    handler: crear_directorio.lambda_handler
+    events:
+      - httpApi:
+          path: /s3/crear-directorio
+          method: post
+
+  subirArchivo:
+    handler: subir_archivo.lambda_handler
+    events:
+      - httpApi:
+          path: /s3/subir-archivo
+          method: post
